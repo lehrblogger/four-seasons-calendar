@@ -5,9 +5,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
-      - key: FS_EMAIL
-        sync: false
-      - key: FS_PASSWORD
+      - key: FS_USER_TOKEN
         sync: false
       - key: CRON_SECRET
         generateValue: true
