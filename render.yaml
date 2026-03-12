@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: four-seasons-calendar
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FS_EMAIL
+        sync: false
+      - key: FS_PASSWORD
+        sync: false
+      - key: CRON_SECRET
+        generateValue: true
+
+  - type: cron
+    name: four-seasons-calendar-cron
+    runtime: python
+    schedule: "0 6 * * *"  # daily at 6am UTC
+    buildCommand: pip install -r requirements.txt
+    startCommand: >
+      curl -sf "https://four-seasons-calendar.onrender.com/run"
+        -H "Authorization: Bearer $CRON_SECRET"
+    envVars:
+      - key: CRON_SECRET
+        fromService:
+          name: four-seasons-calendar
+          type: web
+          envVarKey: CRON_SECRET

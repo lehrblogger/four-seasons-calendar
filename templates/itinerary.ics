@@ -1,0 +1,24 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//four-seasons-calendar//EN
+{% for event in events %}
+BEGIN:VEVENT
+UID:{{ event.uid }}
+DTSTAMP:{{ event.dtstamp }}
+SUMMARY:{{ event.summary | ical_escape }}
+{% if event.allday %}
+DTSTART;VALUE=DATE:{{ event.dtstart }}
+DTEND;VALUE=DATE:{{ event.dtend }}
+{% else %}
+DTSTART:{{ event.dtstart }}
+DTEND:{{ event.dtend }}
+{% endif %}
+{% if event.location %}
+LOCATION:{{ event.location | ical_escape }}
+{% endif %}
+{% if event.description %}
+DESCRIPTION:{{ event.description | ical_escape }}
+{% endif %}
+END:VEVENT
+{% endfor %}
+END:VCALENDAR
